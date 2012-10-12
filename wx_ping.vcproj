@@ -41,6 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="d:\work\windows\sdk\wx-2.9\include;d:\work\windows\sdk\wx-2.9\include\msvc"
 				PreprocessorDefinitions="WIN32;_DEBUG;__WXMSW__;WXUSINGDLL;CPING_USE_ICMP"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -63,7 +64,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="wxbase29ud.lib WSOCK32.LIB"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="f:\work\windows\sdk\wx-2.9\lib\vc_lib"
+				AdditionalLibraryDirectories="d:\work\windows\sdk\wx-2.9\lib\vc_dll"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -198,6 +199,10 @@
 			>
 			<File
 				RelativePath=".\CMyFrame.h"
+				>
+			</File>
+			<File
+				RelativePath=".\global.h"
 				>
 			</File>
 		</Filter>
