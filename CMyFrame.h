@@ -21,11 +21,13 @@
 #include <wx/button.h>
 #include <wx/frame.h>
 #include <wx/dialog.h>
+#include <wx/notebook.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
 #include <wx/menu.h>
 #include <wx/toolbar.h>
+#include <wx/panel.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -112,6 +114,32 @@ class CDialogIperfBase : public wxDialog
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+/// Class CDialogWlanTestBase
+///////////////////////////////////////////////////////////////////////////////
+class CDialogWlanTestBase : public wxDialog 
+{
+	private:
+	
+	protected:
+		wxStaticText* m_staticText21;
+		wxStaticText* m_staticText211;
+		wxNotebook* m_notebook;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnIdle( wxIdleEvent& event ) { event.Skip(); }
+		virtual void OnInitDialog( wxInitDialogEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		wxTextCtrl* m_textCtrlClientIp;
+		wxTextCtrl* m_textCtrlClientIp1;
+		
+		CDialogWlanTestBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Wlan Test"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 835,739 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		~CDialogWlanTestBase();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
 /// Class CMainFrameBase
 ///////////////////////////////////////////////////////////////////////////////
 class CMainFrameBase : public wxFrame 
@@ -138,6 +166,79 @@ class CMainFrameBase : public wxFrame
 		CMainFrameBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 590,428 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		
 		~CMainFrameBase();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class CPanelBandwidthBase
+///////////////////////////////////////////////////////////////////////////////
+class CPanelBandwidthBase : public wxPanel 
+{
+	private:
+	
+	protected:
+		wxButton* m_buttonTest;
+		wxTextCtrl* m_textCtrlInfo;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnTestButtonClick( wxCommandEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		
+		CPanelBandwidthBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 636,493 ), long style = wxTAB_TRAVERSAL ); 
+		~CPanelBandwidthBase();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class CPanelDelayBase
+///////////////////////////////////////////////////////////////////////////////
+class CPanelDelayBase : public wxPanel 
+{
+	private:
+	
+	protected:
+		wxStaticText* m_staticText9;
+	
+	public:
+		
+		CPanelDelayBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL ); 
+		~CPanelDelayBase();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class CPanelJitterBase
+///////////////////////////////////////////////////////////////////////////////
+class CPanelJitterBase : public wxPanel 
+{
+	private:
+	
+	protected:
+		wxStaticText* m_staticText9;
+	
+	public:
+		
+		CPanelJitterBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL ); 
+		~CPanelJitterBase();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class CPanelPackaetDrogRate
+///////////////////////////////////////////////////////////////////////////////
+class CPanelPackaetDrogRate : public wxPanel 
+{
+	private:
+	
+	protected:
+		wxStaticText* m_staticText9;
+	
+	public:
+		
+		CPanelPackaetDrogRate( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL ); 
+		~CPanelPackaetDrogRate();
 	
 };
 

@@ -214,6 +214,58 @@ CDialogIperfBase::~CDialogIperfBase()
 	
 }
 
+CDialogWlanTestBase::CDialogWlanTestBase( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	wxBoxSizer* bSizer2;
+	bSizer2 = new wxBoxSizer( wxVERTICAL );
+	
+	wxBoxSizer* bSizer72;
+	bSizer72 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_staticText21 = new wxStaticText( this, wxID_ANY, wxT("CLIENT IP:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText21->Wrap( -1 );
+	bSizer72->Add( m_staticText21, 0, wxALL, 5 );
+	
+	m_textCtrlClientIp = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer72->Add( m_textCtrlClientIp, 1, wxALL, 5 );
+	
+	m_staticText211 = new wxStaticText( this, wxID_ANY, wxT("Port:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText211->Wrap( -1 );
+	m_staticText211->Hide();
+	
+	bSizer72->Add( m_staticText211, 0, wxALL, 5 );
+	
+	m_textCtrlClientIp1 = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_textCtrlClientIp1->Hide();
+	
+	bSizer72->Add( m_textCtrlClientIp1, 1, wxALL, 5 );
+	
+	bSizer2->Add( bSizer72, 0, wxEXPAND, 5 );
+	
+	m_notebook = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	
+	bSizer2->Add( m_notebook, 1, wxEXPAND | wxALL, 5 );
+	
+	this->SetSizer( bSizer2 );
+	this->Layout();
+	
+	this->Centre( wxBOTH );
+	
+	// Connect Events
+	this->Connect( wxEVT_IDLE, wxIdleEventHandler( CDialogWlanTestBase::OnIdle ) );
+	this->Connect( wxEVT_INIT_DIALOG, wxInitDialogEventHandler( CDialogWlanTestBase::OnInitDialog ) );
+}
+
+CDialogWlanTestBase::~CDialogWlanTestBase()
+{
+	// Disconnect Events
+	this->Disconnect( wxEVT_IDLE, wxIdleEventHandler( CDialogWlanTestBase::OnIdle ) );
+	this->Disconnect( wxEVT_INIT_DIALOG, wxInitDialogEventHandler( CDialogWlanTestBase::OnInitDialog ) );
+	
+}
+
 CMainFrameBase::CMainFrameBase( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
@@ -273,4 +325,85 @@ CMainFrameBase::~CMainFrameBase()
 	m_buttonPing->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CMainFrameBase::OnBtnPingClick ), NULL, this );
 	m_buttonIperf->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CMainFrameBase::OnBtnIperfCllick ), NULL, this );
 	
+}
+
+CPanelBandwidthBase::CPanelBandwidthBase( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+	wxBoxSizer* bSizer2;
+	bSizer2 = new wxBoxSizer( wxVERTICAL );
+	
+	wxBoxSizer* bSizer3;
+	bSizer3 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_buttonTest = new wxButton( this, wxID_ANY, wxT("Test"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer3->Add( m_buttonTest, 1, wxALL, 5 );
+	
+	bSizer2->Add( bSizer3, 0, wxALL|wxEXPAND, 5 );
+	
+	m_textCtrlInfo = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_WORDWRAP );
+	bSizer2->Add( m_textCtrlInfo, 1, wxALL|wxEXPAND, 5 );
+	
+	this->SetSizer( bSizer2 );
+	this->Layout();
+	
+	// Connect Events
+	m_buttonTest->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CPanelBandwidthBase::OnTestButtonClick ), NULL, this );
+}
+
+CPanelBandwidthBase::~CPanelBandwidthBase()
+{
+	// Disconnect Events
+	m_buttonTest->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CPanelBandwidthBase::OnTestButtonClick ), NULL, this );
+	
+}
+
+CPanelDelayBase::CPanelDelayBase( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+	wxBoxSizer* bSizer30;
+	bSizer30 = new wxBoxSizer( wxVERTICAL );
+	
+	m_staticText9 = new wxStaticText( this, wxID_ANY, wxT("2"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText9->Wrap( -1 );
+	bSizer30->Add( m_staticText9, 0, wxALL, 5 );
+	
+	this->SetSizer( bSizer30 );
+	this->Layout();
+}
+
+CPanelDelayBase::~CPanelDelayBase()
+{
+}
+
+CPanelJitterBase::CPanelJitterBase( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+	wxBoxSizer* bSizer30;
+	bSizer30 = new wxBoxSizer( wxVERTICAL );
+	
+	m_staticText9 = new wxStaticText( this, wxID_ANY, wxT("3"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText9->Wrap( -1 );
+	bSizer30->Add( m_staticText9, 0, wxALL, 5 );
+	
+	this->SetSizer( bSizer30 );
+	this->Layout();
+}
+
+CPanelJitterBase::~CPanelJitterBase()
+{
+}
+
+CPanelPackaetDrogRate::CPanelPackaetDrogRate( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+	wxBoxSizer* bSizer30;
+	bSizer30 = new wxBoxSizer( wxVERTICAL );
+	
+	m_staticText9 = new wxStaticText( this, wxID_ANY, wxT("4"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText9->Wrap( -1 );
+	bSizer30->Add( m_staticText9, 0, wxALL, 5 );
+	
+	this->SetSizer( bSizer30 );
+	this->Layout();
+}
+
+CPanelPackaetDrogRate::~CPanelPackaetDrogRate()
+{
 }
