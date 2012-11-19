@@ -21,6 +21,7 @@ CDialogWlanTestBase(parent)
 	m_notebook->AddPage(m_pDelay, "Delay");
 	m_notebook->AddPage(m_pJiffer, "Jiffer");
 	m_notebook->AddPage(m_pPacketDropRate, "Packet Drop Rate");
+	m_textCtrlClientIp->AppendText("192.168.1.205");
 }
 
 CDialogWlanTest::~CDialogWlanTest()
@@ -45,7 +46,13 @@ void CPanelBandwidth::OnTestButtonClick( wxCommandEvent& event )
 {
 	if (!g_pThreadIperf) {
 		m_textCtrlInfo->Clear();
-		wxString strcmd = GetIperfPath() + "-c 192.168.1.1\n";
+		wxString ip = GetInputIp();
+		if (ip.Len()<7) {
+			wxMessageBox("ip wrong:" + ip);
+			return;
+		}
+
+		wxString strcmd = GetIperfPath() + "-c " + GetInputIp() + " -i 1\n";
 		g_pThreadIperf = new CThreadIperf(this, strcmd);
 		g_pThreadIperf->Run();
 		m_buttonTest->Disable();

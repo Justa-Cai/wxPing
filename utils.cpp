@@ -144,7 +144,8 @@ void * CThreadIperf::Entry()
 	}
 	SendInfo("* " + m_strCmds);
 
-	wxInputStream *pInput = m_pProcessIperf->GetErrorStream();
+	wxInputStream *pErrorInput = m_pProcessIperf->GetErrorStream();
+	wxInputStream *pStandInput = m_pProcessIperf->GetInputStream();
 	// check process output
 	while(!TestDestroy()) {
 
@@ -152,9 +153,9 @@ void * CThreadIperf::Entry()
 		if (m_pProcessIperf->IsErrorAvailable()) {
 			wxCharBuffer buffer(4096);
 			size_t offset = 0;
-			while(pInput->CanRead())
+			while(pErrorInput->CanRead())
 			{
-				pInput->Read(buffer.data()+offset, 1);
+				pErrorInput->Read(buffer.data()+offset, 1);
 				offset++;
 			}
 			buffer.shrink(offset);
@@ -164,9 +165,9 @@ void * CThreadIperf::Entry()
 		if (m_pProcessIperf->IsInputAvailable()) {
 			wxCharBuffer buffer(4096);
 			size_t offset = 0;
-			while(pInput->CanRead())
+			while(pStandInput->CanRead())
 			{
-				pInput->Read(buffer.data()+offset, 1);
+				pStandInput->Read(buffer.data()+offset, 1);
 				offset++;
 			}
 			buffer.shrink(offset);
