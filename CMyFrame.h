@@ -21,6 +21,7 @@
 #include <wx/button.h>
 #include <wx/frame.h>
 #include <wx/dialog.h>
+#include <wx/radiobox.h>
 #include <wx/notebook.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
@@ -122,17 +123,22 @@ class CDialogWlanTestBase : public wxDialog
 	
 	protected:
 		wxStaticText* m_staticText21;
-		wxStaticText* m_staticText211;
+		wxStaticText* m_staticText1Info;
 		wxNotebook* m_notebook;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnIdle( wxIdleEvent& event ) { event.Skip(); }
 		virtual void OnInitDialog( wxInitDialogEvent& event ) { event.Skip(); }
+		virtual void TCPUDPOnRadioBox( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnNotebookPageChanged( wxNotebookEvent& event ) { event.Skip(); }
 		
 	
 	public:
 		wxTextCtrl* m_textCtrlClientIp;
-		wxTextCtrl* m_textCtrlClientIp1;
+		wxBoxSizer* bSizerTCP_UDP;
+		wxRadioBox* m_radioBox_TCPUDP;
+		wxBoxSizer* bSizer_UDPSpeed;
+		wxTextCtrl* m_textCtrlUDPSpeed;
 		
 		CDialogWlanTestBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Wlan Test"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 835,739 ), long style = wxDEFAULT_DIALOG_STYLE ); 
 		~CDialogWlanTestBase();
@@ -199,7 +205,12 @@ class CPanelDelayBase : public wxPanel
 	private:
 	
 	protected:
-		wxStaticText* m_staticText9;
+		wxButton* m_buttonTest;
+		wxTextCtrl* m_textCtrlInfo;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnTestButtonClick( wxCommandEvent& event ) { event.Skip(); }
+		
 	
 	public:
 		
@@ -216,7 +227,12 @@ class CPanelJitterBase : public wxPanel
 	private:
 	
 	protected:
-		wxStaticText* m_staticText9;
+		wxButton* m_buttonTest;
+		wxTextCtrl* m_textCtrlInfo;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnTestButtonClick( wxCommandEvent& event ) { event.Skip(); }
+		
 	
 	public:
 		
@@ -226,19 +242,24 @@ class CPanelJitterBase : public wxPanel
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-/// Class CPanelPackaetDrogRate
+/// Class CPanelPackaetDrogRateBase
 ///////////////////////////////////////////////////////////////////////////////
-class CPanelPackaetDrogRate : public wxPanel 
+class CPanelPackaetDrogRateBase : public wxPanel 
 {
 	private:
 	
 	protected:
-		wxStaticText* m_staticText9;
+		wxButton* m_buttonTest;
+		wxTextCtrl* m_textCtrlInfo;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnTestButtonClick( wxCommandEvent& event ) { event.Skip(); }
+		
 	
 	public:
 		
-		CPanelPackaetDrogRate( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL ); 
-		~CPanelPackaetDrogRate();
+		CPanelPackaetDrogRateBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL ); 
+		~CPanelPackaetDrogRateBase();
 	
 };
 

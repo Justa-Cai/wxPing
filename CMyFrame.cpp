@@ -231,18 +231,28 @@ CDialogWlanTestBase::CDialogWlanTestBase( wxWindow* parent, wxWindowID id, const
 	m_textCtrlClientIp = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer72->Add( m_textCtrlClientIp, 1, wxALL, 5 );
 	
-	m_staticText211 = new wxStaticText( this, wxID_ANY, wxT("Port:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText211->Wrap( -1 );
-	m_staticText211->Hide();
-	
-	bSizer72->Add( m_staticText211, 0, wxALL, 5 );
-	
-	m_textCtrlClientIp1 = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	m_textCtrlClientIp1->Hide();
-	
-	bSizer72->Add( m_textCtrlClientIp1, 1, wxALL, 5 );
-	
 	bSizer2->Add( bSizer72, 0, wxEXPAND, 5 );
+	
+	bSizerTCP_UDP = new wxBoxSizer( wxHORIZONTAL );
+	
+	wxString m_radioBox_TCPUDPChoices[] = { wxT("TCP"), wxT("UDP") };
+	int m_radioBox_TCPUDPNChoices = sizeof( m_radioBox_TCPUDPChoices ) / sizeof( wxString );
+	m_radioBox_TCPUDP = new wxRadioBox( this, wxID_ANY, wxT("TCP/UDP"), wxDefaultPosition, wxDefaultSize, m_radioBox_TCPUDPNChoices, m_radioBox_TCPUDPChoices, 2, wxRA_SPECIFY_COLS );
+	m_radioBox_TCPUDP->SetSelection( 0 );
+	bSizerTCP_UDP->Add( m_radioBox_TCPUDP, 0, wxALL, 5 );
+	
+	bSizer_UDPSpeed = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_staticText1Info = new wxStaticText( this, wxID_ANY, wxT("UDP Send Speed (Kbit/sec):"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText1Info->Wrap( -1 );
+	bSizer_UDPSpeed->Add( m_staticText1Info, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	m_textCtrlUDPSpeed = new wxTextCtrl( this, wxID_ANY, wxT("10"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer_UDPSpeed->Add( m_textCtrlUDPSpeed, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	bSizerTCP_UDP->Add( bSizer_UDPSpeed, 0, wxEXPAND, 5 );
+	
+	bSizer2->Add( bSizerTCP_UDP, 0, wxEXPAND, 5 );
 	
 	m_notebook = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
 	
@@ -256,6 +266,8 @@ CDialogWlanTestBase::CDialogWlanTestBase( wxWindow* parent, wxWindowID id, const
 	// Connect Events
 	this->Connect( wxEVT_IDLE, wxIdleEventHandler( CDialogWlanTestBase::OnIdle ) );
 	this->Connect( wxEVT_INIT_DIALOG, wxInitDialogEventHandler( CDialogWlanTestBase::OnInitDialog ) );
+	m_radioBox_TCPUDP->Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( CDialogWlanTestBase::TCPUDPOnRadioBox ), NULL, this );
+	m_notebook->Connect( wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, wxNotebookEventHandler( CDialogWlanTestBase::OnNotebookPageChanged ), NULL, this );
 }
 
 CDialogWlanTestBase::~CDialogWlanTestBase()
@@ -263,6 +275,8 @@ CDialogWlanTestBase::~CDialogWlanTestBase()
 	// Disconnect Events
 	this->Disconnect( wxEVT_IDLE, wxIdleEventHandler( CDialogWlanTestBase::OnIdle ) );
 	this->Disconnect( wxEVT_INIT_DIALOG, wxInitDialogEventHandler( CDialogWlanTestBase::OnInitDialog ) );
+	m_radioBox_TCPUDP->Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( CDialogWlanTestBase::TCPUDPOnRadioBox ), NULL, this );
+	m_notebook->Disconnect( wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, wxNotebookEventHandler( CDialogWlanTestBase::OnNotebookPageChanged ), NULL, this );
 	
 }
 
@@ -359,51 +373,90 @@ CPanelBandwidthBase::~CPanelBandwidthBase()
 
 CPanelDelayBase::CPanelDelayBase( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
 {
-	wxBoxSizer* bSizer30;
-	bSizer30 = new wxBoxSizer( wxVERTICAL );
+	wxBoxSizer* bSizer2;
+	bSizer2 = new wxBoxSizer( wxVERTICAL );
 	
-	m_staticText9 = new wxStaticText( this, wxID_ANY, wxT("2"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText9->Wrap( -1 );
-	bSizer30->Add( m_staticText9, 0, wxALL, 5 );
+	wxBoxSizer* bSizer3;
+	bSizer3 = new wxBoxSizer( wxHORIZONTAL );
 	
-	this->SetSizer( bSizer30 );
+	m_buttonTest = new wxButton( this, wxID_ANY, wxT("Test"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer3->Add( m_buttonTest, 1, wxALL, 5 );
+	
+	bSizer2->Add( bSizer3, 0, wxALL|wxEXPAND, 5 );
+	
+	m_textCtrlInfo = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_WORDWRAP );
+	bSizer2->Add( m_textCtrlInfo, 1, wxALL|wxEXPAND, 5 );
+	
+	this->SetSizer( bSizer2 );
 	this->Layout();
+	
+	// Connect Events
+	m_buttonTest->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CPanelDelayBase::OnTestButtonClick ), NULL, this );
 }
 
 CPanelDelayBase::~CPanelDelayBase()
 {
+	// Disconnect Events
+	m_buttonTest->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CPanelDelayBase::OnTestButtonClick ), NULL, this );
+	
 }
 
 CPanelJitterBase::CPanelJitterBase( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
 {
-	wxBoxSizer* bSizer30;
-	bSizer30 = new wxBoxSizer( wxVERTICAL );
+	wxBoxSizer* bSizer2;
+	bSizer2 = new wxBoxSizer( wxVERTICAL );
 	
-	m_staticText9 = new wxStaticText( this, wxID_ANY, wxT("3"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText9->Wrap( -1 );
-	bSizer30->Add( m_staticText9, 0, wxALL, 5 );
+	wxBoxSizer* bSizer3;
+	bSizer3 = new wxBoxSizer( wxHORIZONTAL );
 	
-	this->SetSizer( bSizer30 );
+	m_buttonTest = new wxButton( this, wxID_ANY, wxT("Test"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer3->Add( m_buttonTest, 1, wxALL, 5 );
+	
+	bSizer2->Add( bSizer3, 0, wxALL|wxEXPAND, 5 );
+	
+	m_textCtrlInfo = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_WORDWRAP );
+	bSizer2->Add( m_textCtrlInfo, 1, wxALL|wxEXPAND, 5 );
+	
+	this->SetSizer( bSizer2 );
 	this->Layout();
+	
+	// Connect Events
+	m_buttonTest->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CPanelJitterBase::OnTestButtonClick ), NULL, this );
 }
 
 CPanelJitterBase::~CPanelJitterBase()
 {
+	// Disconnect Events
+	m_buttonTest->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CPanelJitterBase::OnTestButtonClick ), NULL, this );
+	
 }
 
-CPanelPackaetDrogRate::CPanelPackaetDrogRate( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+CPanelPackaetDrogRateBase::CPanelPackaetDrogRateBase( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
 {
-	wxBoxSizer* bSizer30;
-	bSizer30 = new wxBoxSizer( wxVERTICAL );
+	wxBoxSizer* bSizer2;
+	bSizer2 = new wxBoxSizer( wxVERTICAL );
 	
-	m_staticText9 = new wxStaticText( this, wxID_ANY, wxT("4"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText9->Wrap( -1 );
-	bSizer30->Add( m_staticText9, 0, wxALL, 5 );
+	wxBoxSizer* bSizer3;
+	bSizer3 = new wxBoxSizer( wxHORIZONTAL );
 	
-	this->SetSizer( bSizer30 );
+	m_buttonTest = new wxButton( this, wxID_ANY, wxT("Test"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer3->Add( m_buttonTest, 1, wxALL, 5 );
+	
+	bSizer2->Add( bSizer3, 0, wxALL|wxEXPAND, 5 );
+	
+	m_textCtrlInfo = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_WORDWRAP );
+	bSizer2->Add( m_textCtrlInfo, 1, wxALL|wxEXPAND, 5 );
+	
+	this->SetSizer( bSizer2 );
 	this->Layout();
+	
+	// Connect Events
+	m_buttonTest->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CPanelPackaetDrogRateBase::OnTestButtonClick ), NULL, this );
 }
 
-CPanelPackaetDrogRate::~CPanelPackaetDrogRate()
+CPanelPackaetDrogRateBase::~CPanelPackaetDrogRateBase()
 {
+	// Disconnect Events
+	m_buttonTest->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CPanelPackaetDrogRateBase::OnTestButtonClick ), NULL, this );
+	
 }

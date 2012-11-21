@@ -54,10 +54,6 @@ static void ping_cb(BOOL bResult, CPingReply &pr1)
 	wxPostEvent(g_pWindow->GetEventHandler(), evt);
 }
 
-
-
-
-
 CPingThread::CPingThread( wxWindow *pWindow, wxString strOrigIp, int times/*=5*/ ) :m_pWindow(pWindow)
 ,m_strOrigIp(strOrigIp)
 ,m_times(times)
