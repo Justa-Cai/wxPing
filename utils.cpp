@@ -4,7 +4,12 @@
 /************************************************************************/
 wxString GetIperfPath()
 {
-	return wxGetCwd() + "/iperf/iperf.exe ";
+	return wxGetCwd() + "\\iperf\\iperf.exe ";
+}
+
+wxString GetResPath()
+{
+	return wxGetCwd() + "\\res\\";
 }
 
 /************************************************************************/
@@ -54,7 +59,7 @@ static void ping_cb(BOOL bResult, CPingReply &pr1)
 	wxPostEvent(g_pWindow->GetEventHandler(), evt);
 }
 
-CPingThread::CPingThread( wxWindow *pWindow, wxString strOrigIp, int times/*=5*/ ) :m_pWindow(pWindow)
+CThreadPing::CThreadPing( wxWindow *pWindow, wxString strOrigIp, int times/*=5*/ ) :m_pWindow(pWindow)
 ,m_strOrigIp(strOrigIp)
 ,m_times(times)
 {
@@ -65,10 +70,9 @@ CPingThread::CPingThread( wxWindow *pWindow, wxString strOrigIp, int times/*=5*/
 	g_pingDelayTotal=0;
 	g_pingDelayMin=g_pingDelayMax=-1;
 	Create();
-	Run();
 }
 
-void * CPingThread::Entry()
+void * CThreadPing::Entry()
 {
 	CPing ping;
 	CPingReply pr1;
@@ -82,7 +86,7 @@ void * CPingThread::Entry()
 	return NULL;
 }
 
-void CPingThread::OnExit()
+void CThreadPing::OnExit()
 {
 	ShowInfo(wxString::Format("Send Total:%d Send Succ:%d Lost:%d(%.2f%%)\nMin Delay:%dms Max delay:%dms Average delay:%dms", 
 		g_pingTotal, g_pingSend, g_pingLost, g_pingLost/(float)g_pingTotal*100,
@@ -92,7 +96,7 @@ void CPingThread::OnExit()
 	wxPostEvent(m_pWindow->GetEventHandler(), evt);
 }
 
-void CPingThread::ShowInfo( wxString str )
+void CThreadPing::ShowInfo( wxString str )
 {
 	wxCommandEvent evt(ENUM_CUSTOMEVENT_PING);
 	evt.SetString(str);

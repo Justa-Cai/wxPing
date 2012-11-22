@@ -124,6 +124,7 @@ class CDialogWlanTestBase : public wxDialog
 	protected:
 		wxStaticText* m_staticText21;
 		wxStaticText* m_staticText1Info;
+		wxStaticText* m_staticText1Info1;
 		wxNotebook* m_notebook;
 		
 		// Virtual event handlers, overide them in your derived class
@@ -139,8 +140,10 @@ class CDialogWlanTestBase : public wxDialog
 		wxRadioBox* m_radioBox_TCPUDP;
 		wxBoxSizer* bSizer_UDPSpeed;
 		wxTextCtrl* m_textCtrlUDPSpeed;
+		wxBoxSizer* bSizer_TestTime;
+		wxTextCtrl* m_textCtrlTestTime;
 		
-		CDialogWlanTestBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Wlan Test"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 835,739 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		CDialogWlanTestBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Wlan Test"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 835,739 ), long style = wxDEFAULT_DIALOG_STYLE|wxMAXIMIZE_BOX|wxMINIMIZE_BOX ); 
 		~CDialogWlanTestBase();
 	
 };
@@ -169,7 +172,7 @@ class CMainFrameBase : public wxFrame
 	
 	public:
 		
-		CMainFrameBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 590,428 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		CMainFrameBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("wxPing"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 590,428 ), long style = wxDEFAULT_FRAME_STYLE|wxICONIZE|wxTAB_TRAVERSAL );
 		
 		~CMainFrameBase();
 	

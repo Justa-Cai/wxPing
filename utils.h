@@ -10,12 +10,12 @@
 #define  MAX(x,y) (x>y?x:y)
 /** @brief Get Iperf tools path  */
 wxString GetIperfPath();
+wxString GetResPath();
 
-
-class CPingThread :public wxThread
+class CThreadPing :public wxThread
 {
 public:
-	CPingThread(wxWindow *pWindow, wxString strOrigIp, int times=5);
+	CThreadPing(wxWindow *pWindow, wxString strOrigIp, int times=5);
 
 	virtual void * Entry();
 

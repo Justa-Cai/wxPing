@@ -1,5 +1,6 @@
 #include "wlantest.h"
 static CThreadIperf *g_pThreadIperf;
+static CThreadPing *g_pThreadPing;
 /************************************************************************/
 /* Main Page                                                            */
 /************************************************************************/
@@ -27,24 +28,57 @@ static inline int GetUDPSendSpeed()
 	else
 		return v;
 }
+
+static inline int GetTestTimes()
+{
+	int v = wxAtoi(g_pDialogWlanTest->m_textCtrlTestTime->GetValue());
+	if (v<=0)
+		return 10;
+	else
+		return v;
+}
+
+static wxString GetIperfOptions()
+{
+	wxString strUDP;
+	wxString ip = GetInputIp();
+	wxString strTestTime;
+	wxString strOptions;
+	if (ip.Len()<7) {
+		wxMessageBox("ip wrong:" + ip);
+		return wxEmptyString;
+	}
+	if (IsUDPTest())
+		strUDP.Printf(" -u -b %dK ", GetUDPSendSpeed());
+
+	strTestTime.Printf(" -t %d", GetTestTimes());
+
+	strOptions.Printf(" -c %s %s %s -i 1\n", GetInputIp(), strUDP, strTestTime);
+	return strOptions;
+}
+
 /************************************************************************/
 /* main Windows                                                                     */
 /************************************************************************/
 CDialogWlanTest::CDialogWlanTest( wxWindow *parent/*=NULL */ ) :
 CDialogWlanTestBase(parent)
 {
+	Maximize(true);
 	g_pDialogWlanTest = this;
 	m_pBandwidth = new CPanelBandwidth(m_notebook);
 	m_pDelay = new CPanelDelay(m_notebook);
 	m_pJiffer = new CPanelJitter(m_notebook);
 	m_pPacketDropRate = new CPanelPackaetDrogRate(m_notebook);
 	m_notebook->AddPage(m_pBandwidth, "Bandwidth");
-	m_notebook->AddPage(m_pDelay, "Delay");
+	m_notebook->AddPage(m_pDelay, "Ping Delay");
 	m_notebook->AddPage(m_pJiffer, "Jiffer");
 	m_notebook->AddPage(m_pPacketDropRate, "Packet Drop Rate");
 	m_textCtrlClientIp->AppendText("192.168.1.205");
-	bSizer_UDPSpeed->Show(false);
 	m_textCtrlUDPSpeed->SetValue("10240");
+	m_radioBox_TCPUDP->SetSelection(0);
+	m_textCtrlUDPSpeed->Enable(false);
+	m_icon.LoadFile(GetResPath() + "logo.png", wxBITMAP_TYPE_PNG, 32, 32 );
+	SetIcon(m_icon);
 }
 
 CDialogWlanTest::~CDialogWlanTest()
@@ -58,20 +92,26 @@ CDialogWlanTest::~CDialogWlanTest()
 
 void CDialogWlanTest::TCPUDPOnRadioBox( wxCommandEvent& event )
 {
-	if (m_radioBox_TCPUDP->GetSelection()==0) {
+	if (m_radioBox_TCPUDP->GetSelection()==0 || m_notebook->GetSelection()==1) {
 		// tcp unshow
-		bSizer_UDPSpeed->Show(false);
+		m_textCtrlUDPSpeed->Enable(false);
 	}
 	else {
 		// udp show
-		bSizer_UDPSpeed->Show(true);
+		m_textCtrlUDPSpeed->Enable(true);
 	}
 }
 
 void CDialogWlanTest::OnNotebookPageChanged( wxNotebookEvent& event )
 {
 	if (g_pThreadIperf){
-		event.SetSelection(event.GetOldSelection());
+		static bool bSkip = false;
+		if (!bSkip) {
+			bSkip = true;
+			m_notebook->SetSelection(event.GetOldSelection());
+		}
+		else
+			bSkip = false;
 	}
 	else {
 		switch(event.GetSelection()) {
@@ -80,8 +120,8 @@ void CDialogWlanTest::OnNotebookPageChanged( wxNotebookEvent& event )
 				m_radioBox_TCPUDP->Enable();
 				break;
 			case 1:
-				m_radioBox_TCPUDP->SetSelection(0);
-				m_radioBox_TCPUDP->Enable(false);
+				m_radioBox_TCPUDP->SetSelection(1);
+				m_textCtrlUDPSpeed->Enable(false);
 				break;
 			case 2:
 				m_radioBox_TCPUDP->SetSelection(1);
@@ -109,21 +149,16 @@ CPanelBandwidthBase(parent)
 
 void CPanelBandwidth::OnTestButtonClick( wxCommandEvent& event )
 {
-	wxString strUDP; 
 	if (!g_pThreadIperf) {
-		m_textCtrlInfo->Clear();
-		wxString ip = GetInputIp();
-		if (ip.Len()<7) {
-			wxMessageBox("ip wrong:" + ip);
-			return;
-		}
-		if (IsUDPTest())
-			strUDP.Printf(" -u -b %dK ", GetUDPSendSpeed());
+		wxString strOption = GetIperfOptions();
+		if (!strOption.IsEmpty()) {
+			m_textCtrlInfo->Clear();
 
-		wxString strcmd = GetIperfPath() + "-c " + GetInputIp() + strUDP + " -i 1\n";
-		g_pThreadIperf = new CThreadIperf(this, strcmd);
-		g_pThreadIperf->Run();
-		m_buttonTest->Disable();
+			wxString strcmd = GetIperfPath() + strOption;
+			g_pThreadIperf = new CThreadIperf(this, strcmd);
+			g_pThreadIperf->Run();
+			m_buttonTest->Disable();
+		}
 	}
 }
 
@@ -259,18 +294,28 @@ CPanelDelayBase(parent)
 
 void CPanelDelay::OnTestButtonClick( wxCommandEvent& event )
 {
+	if (g_pThreadPing==NULL) {
+		m_textCtrlInfo->Clear();
+		m_buttonTest->Enable(false);
+		g_pThreadPing = new CThreadPing(this, GetInputIp(), GetTestTimes());
+		g_pThreadPing->Run();
+	}
 }
 
-void CPanelDelay::OnIperfInfo( wxCommandEvent& event )
+void CPanelDelay::OnPingInfo( wxCommandEvent& event )
 {
+	wxString str = event.GetString();
+	m_textCtrlInfo->AppendText(str);
 }
 
-void CPanelDelay::OnIperfExit( wxCommandEvent& event )
+void CPanelDelay::OnPingExit( wxCommandEvent& event )
 {
+	g_pThreadPing = NULL;
+	m_buttonTest->Enable();
 }
 BEGIN_EVENT_TABLE(CPanelDelay, wxPanel)
-EVT_COMMAND(wxID_ANY, ENUM_CUSTOMEVENT_IPERF_EXIT, CPanelDelay::OnIperfExit)
-EVT_COMMAND(wxID_ANY, ENUM_CUSTOMEVENT_IPERF_INFO, CPanelDelay::OnIperfInfo)
+EVT_COMMAND(wxID_ANY, ENUM_CUSTOMEVENT_PING_EXIT, CPanelDelay::OnPingExit)
+EVT_COMMAND(wxID_ANY, ENUM_CUSTOMEVENT_PING, CPanelDelay::OnPingInfo)
 END_EVENT_TABLE()
 
 

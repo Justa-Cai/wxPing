@@ -52,8 +52,8 @@ public:
 protected:
 	virtual void OnTestButtonClick( wxCommandEvent& event );
 
-	void OnIperfInfo( wxCommandEvent& event );
-	void OnIperfExit( wxCommandEvent& event );
+	void OnPingInfo( wxCommandEvent& event );
+	void OnPingExit( wxCommandEvent& event );
 private:
 	DECLARE_EVENT_TABLE()
 };
@@ -69,6 +69,7 @@ public:
 	CPanelDelay *m_pDelay;
 	CPanelJitter *m_pJiffer;
 	CPanelPackaetDrogRate *m_pPacketDropRate;
+	wxIcon m_icon;
 
 private:
 	DECLARE_EVENT_TABLE()

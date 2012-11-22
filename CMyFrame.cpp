@@ -241,16 +241,32 @@ CDialogWlanTestBase::CDialogWlanTestBase( wxWindow* parent, wxWindowID id, const
 	m_radioBox_TCPUDP->SetSelection( 0 );
 	bSizerTCP_UDP->Add( m_radioBox_TCPUDP, 0, wxALL, 5 );
 	
+	wxBoxSizer* bSizer40;
+	bSizer40 = new wxBoxSizer( wxVERTICAL );
+	
 	bSizer_UDPSpeed = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_staticText1Info = new wxStaticText( this, wxID_ANY, wxT("UDP Send Speed (Kbit/sec):"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText1Info = new wxStaticText( this, wxID_ANY, wxT("UDP Send Speed (Kbit/sec):"), wxDefaultPosition, wxSize( 180,-1 ), wxALIGN_RIGHT );
 	m_staticText1Info->Wrap( -1 );
 	bSizer_UDPSpeed->Add( m_staticText1Info, 0, wxALIGN_CENTER|wxALL, 5 );
 	
 	m_textCtrlUDPSpeed = new wxTextCtrl( this, wxID_ANY, wxT("10"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer_UDPSpeed->Add( m_textCtrlUDPSpeed, 0, wxALIGN_CENTER|wxALL, 5 );
 	
-	bSizerTCP_UDP->Add( bSizer_UDPSpeed, 0, wxEXPAND, 5 );
+	bSizer40->Add( bSizer_UDPSpeed, 0, wxEXPAND, 5 );
+	
+	bSizer_TestTime = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_staticText1Info1 = new wxStaticText( this, wxID_ANY, wxT("Test Total Time(S):"), wxDefaultPosition, wxSize( 180,-1 ), wxALIGN_RIGHT );
+	m_staticText1Info1->Wrap( -1 );
+	bSizer_TestTime->Add( m_staticText1Info1, 0, wxALIGN_CENTER|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	m_textCtrlTestTime = new wxTextCtrl( this, wxID_ANY, wxT("10"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer_TestTime->Add( m_textCtrlTestTime, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	bSizer40->Add( bSizer_TestTime, 0, wxEXPAND, 5 );
+	
+	bSizerTCP_UDP->Add( bSizer40, 1, wxEXPAND, 5 );
 	
 	bSizer2->Add( bSizerTCP_UDP, 0, wxEXPAND, 5 );
 	

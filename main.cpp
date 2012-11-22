@@ -36,7 +36,7 @@ public:
 		if (m_pThread==NULL) {
 			m_textCtrlInfo->Clear();
 			m_buttonPing->Enable(false);
-			m_pThread = new CPingThread(this, m_textCtrlIP->GetValue(), wxAtoi(m_textCtrlTimes->GetValue()));
+			m_pThread = new CThreadPing(this, m_textCtrlIP->GetValue(), wxAtoi(m_textCtrlTimes->GetValue()));
 		}
 	}
 
@@ -53,7 +53,7 @@ public:
 	}
 
 public:
-	CPingThread *m_pThread;
+	CThreadPing *m_pThread;
 
 private:
 	DECLARE_EVENT_TABLE()
@@ -75,7 +75,7 @@ public:
 		if (m_pThread==NULL) {
 			m_textCtrlInfo->Clear();
 			m_buttonPing->Enable(false);
-			m_pThread = new CPingThread(this, m_textCtrlIP->GetValue(), wxAtoi(m_textCtrlTimes->GetValue()));
+			m_pThread = new CThreadPing(this, m_textCtrlIP->GetValue(), wxAtoi(m_textCtrlTimes->GetValue()));
 		}
 	}
 
@@ -92,7 +92,7 @@ public:
 	}
 
 public:
-	CPingThread *m_pThread;
+	CThreadPing *m_pThread;
 
 private:
 	DECLARE_EVENT_TABLE()
@@ -264,6 +264,7 @@ public:
 
 bool MyApp::OnInit()
 {
+	wxInitAllImageHandlers();
 	CMainFrame *pFrame = new CMainFrame();
 	pFrame->Show();
 	return true;

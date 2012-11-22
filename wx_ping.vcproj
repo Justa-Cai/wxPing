@@ -120,7 +120,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				AdditionalIncludeDirectories="d:\work\windows\sdk\wx-2.9\include;d:\work\windows\sdk\wx-2.9\include\msvc"
+				PreprocessorDefinitions="WIN32;__WXMSW__;WXUSINGDLL;CPING_USE_ICMP"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -138,9 +139,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="wxbase29u.lib WSOCK32.LIB"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="d:\work\windows\sdk\wx-2.9\lib\vc_dll"
 				GenerateDebugInformation="true"
-				SubSystem="1"
+				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
@@ -175,32 +178,6 @@
 	</References>
 	<Files>
 		<Filter
-			Name="源文件"
-			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
-			>
-			<File
-				RelativePath=".\CMyFrame.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\main.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ping.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\utils.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\wlantest.cpp"
-				>
-			</File>
-		</Filter>
-		<Filter
 			Name="头文件"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
@@ -227,6 +204,32 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+		</Filter>
+		<Filter
+			Name="源文件"
+			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			>
+			<File
+				RelativePath=".\CMyFrame.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\main.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ping.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\utils.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\wlantest.cpp"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
